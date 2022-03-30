@@ -1,4 +1,5 @@
 // Core
+import 'dart:io';
 
 // Flutter Sdks
 import 'package:flutter/material.dart';
@@ -19,8 +20,6 @@ class PlaceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final places = context.watch<GreatPlaces>().places;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Places'),
@@ -35,22 +34,27 @@ class PlaceList extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: places.isEmpty
-            ? Center(
-                child: Text(
-                  'No Places Listed. and places length is ${places.length}',
-                ),
-              )
-            : ListView.builder(
-                itemCount: places.length,
-                itemBuilder: (ctx, i) => ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: FileImage(places[i].image),
-                  ),
-                  title: Text(places[i].title),
-                  onTap: () {},
-                ),
-              ),
+        child: FutureBuilder(
+          future: context.read<GreatPlaces>().fetchAndSetPlace(),
+          builder: (ctx, snapshot) =>
+              snapshot.connectionState == ConnectionState.waiting
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Consumer<GreatPlaces>(
+                      child: const Text('No Place Found!'),
+                      builder: (ctx, greatPlace, child) => greatPlace.places.isEmpty ? child! : ListView.builder(
+                        itemCount: greatPlace.places.length,
+                        itemBuilder: (ctx, i) => ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: FileImage(File(greatPlace.places[i].image)),
+                          ),
+                          title: Text(greatPlace.places[i].title),
+                          onTap: () {},
+                        ),
+                      ),
+                    ),
+        ),
       ),
     );
   }
