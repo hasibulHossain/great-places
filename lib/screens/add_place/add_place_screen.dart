@@ -22,12 +22,12 @@ class AddPlace extends StatefulWidget {
 }
 
 class _AddPlaceState extends State<AddPlace> {
-  File? _pickedImage;
+  String? _pickedImage;
 
   final _titleController = TextEditingController();
 
-  void _selectImage(File img) {
-    _pickedImage = img;
+  void _selectImage(String savedImgLocation) {
+    _pickedImage = savedImgLocation;
   }
 
   void _savePlace() {
