@@ -1,16 +1,42 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'dart:io';
 
+// flutter sdk
+import 'package:flutter/material.dart';
+
+// third party imports
+import 'package:provider/provider.dart';
+
+// providers
+import '../../providers/places/places.dart';
+
+// screens
+
+// widgets
 import '../../widgets/image_input/image_input.dart';
 
 class AddPlace extends StatefulWidget {
-  const AddPlace({Key? key}) : super(key: key);
+  AddPlace({Key? key}) : super(key: key);
 
   @override
   State<AddPlace> createState() => _AddPlaceState();
 }
 
 class _AddPlaceState extends State<AddPlace> {
+  File? _pickedImage;
+
+  final _titleController = TextEditingController();
+
+  void _selectImage(File img) {
+    _pickedImage = img;
+  }
+
+  void _savePlace() {
+    if(_titleController.text.isEmpty || _pickedImage == null) return;
+    
+    context.read<GreatPlaces>().savePlace(_titleController.text, _pickedImage!);
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,19 +51,20 @@ class _AddPlaceState extends State<AddPlace> {
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
-                  children: const [
+                  children: [
                     TextField(
+                      controller: _titleController,
                       decoration:
-                          InputDecoration(labelText: 'Place', hintText: 'Dhaka'),
+                          const InputDecoration(labelText: 'Place', hintText: 'Dhaka'),
                     ),
-                    SizedBox(height: 10),
-                    ImageInput()
+                    const SizedBox(height: 10),
+                    ImageInput(_selectImage)
                   ],
                 ),
               ),
             ),
             RaisedButton.icon(
-              onPressed: () {},
+              onPressed: _savePlace,
               icon: Icon(Icons.add),
               label: Text('Add Place'),
               color: Theme.of(context).colorScheme.secondary,
