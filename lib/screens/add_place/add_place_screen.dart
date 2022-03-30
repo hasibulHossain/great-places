@@ -13,6 +13,7 @@ import '../../providers/places/places.dart';
 
 // widgets
 import '../../widgets/image_input/image_input.dart';
+import '../../widgets/location_input/location_input.dart';
 
 class AddPlace extends StatefulWidget {
   AddPlace({Key? key}) : super(key: key);
@@ -58,7 +59,9 @@ class _AddPlaceState extends State<AddPlace> {
                           const InputDecoration(labelText: 'Place', hintText: 'Dhaka'),
                     ),
                     const SizedBox(height: 10),
-                    ImageInput(_selectImage)
+                    ImageInput(_selectImage),
+                    const SizedBox(height: 10,),
+                    const LocationInput()
                   ],
                 ),
               ),
