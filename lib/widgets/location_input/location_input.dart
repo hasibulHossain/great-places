@@ -36,6 +36,7 @@ class _LocationInputState extends State<LocationInput> {
     // Location services are not enabled don't continue
     // accessing the position and request users of the 
     // App to enable the location services.
+    await Geolocator.openLocationSettings();
     return Future.error('Location services are disabled.');
   }
 
